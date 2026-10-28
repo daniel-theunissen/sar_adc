@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sarlib"
+version = "0.1.0"
+description = "Shared specs, gm/Id sizing and ngspice-analysis helpers for the 7-bit SAR ADC"
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy", "pandas", "matplotlib", "pygmid"]
+
+[tool.setuptools]
+packages = ["sarlib"]

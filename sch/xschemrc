@@ -1,0 +1,12 @@
+# xschemrc for the sar_adc schematic directory
+# Place in /foss/designs/sar_adc/sch and start xschem from that directory.
+
+# A local xschemrc is used instead of /headless/.xschem/xschemrc, so repeat
+# what that file does: load the PDK config (run `sak-pdk sky130A` first).
+if { [info exists ::env(PDK_ROOT)] && [info exists ::env(PDK)] } {
+    source $env(PDK_ROOT)/$env(PDK)/libs.tech/xschem/xschemrc
+}
+
+# Add this directory to the library path so xschem can show schematics
+# relative to it (e.g. vi_converter/vi_converter.sch).
+append XSCHEM_LIBRARY_PATH :[file dirname [file normalize [info script]]]

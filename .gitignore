@@ -1,0 +1,28 @@
+# simulator output (regenerate from the testbench schematics)
+simulation/
+*.raw
+*.vcd
+*.fst
+
+# gm/Id tables (regenerate: gmid_*.sch techsweeps, then gmid/techsweep_txt_to_mat.ipynb)
+techsweep_*.txt
+*.mat
+
+# archived bulk data
+sch/archive/adc_simulation/
+sch/archive/vi_converter/math
+
+# python
+.venv/
+__pycache__/
+*.egg-info/
+.ipynb_checkpoints/
+
+# rtl builds
+rtl/_obj_dir/
+rtl/src/top_obj_dir/
+rtl/test/sim_build/
+rtl/.so
+
+# editor
+.vscode/
