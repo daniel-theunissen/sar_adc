@@ -1,6 +1,6 @@
 # Architecture
 
-7-bit, 1 MS/s current-mode SAR ADC in sky130A at VDD = 1.8 V, after the current-mode converter of Hammerschmied & Huang (figure numbers below refer to that paper). Every number in this document comes from [`sch/sarlib/specs.py`](sch/sarlib/specs.py) or from the notebooks' current outputs. Symbols in `code font` are the names used there.
+7-bit, 1 MS/s current-mode SAR ADC in sky130A at VDD = 1.8 V, after the current-mode converter of Hammerschmied & Huang (figure numbers below refer to that paper). Requirements and operating conditions come from [`sch/sarlib/specs.py`](sch/sarlib/specs.py), device sizing choices from the top of each sizing notebook, and results from the notebooks' current outputs. Symbols in `code font` are the names used in `specs.py`.
 
 ## Signal chain
 
@@ -46,7 +46,7 @@ $$
 \Delta I_n = I_{D2} - I_2 = -(k\,I_\mathrm{LSB} - I_1)
 $$
 
-so the comparator sees $\Delta I_p - \Delta I_n = 2\,(k\,I_\mathrm{LSB} - I_1)$. A common-mode current ε (from mismatch between the 40 µA copies) adds equally to both and cancels. Substituting the V-to-I output gives the transition code
+so the comparator sees $\Delta I_p - \Delta I_n = 2\,(k\,I_\mathrm{LSB} - I_1)$, and one code step moves the differential node voltage by $2\,R_\mathrm{tr}\,I_\mathrm{LSB}$ near the decision point. A common-mode current ε (from mismatch between the 40 µA copies) adds equally to both and cancels. Substituting the V-to-I output gives the transition code
 
 $$
 k^* = \frac{I_1}{I_\mathrm{LSB}} = \frac{2^N}{2} + \frac{V_+ - V_-}{V_\mathrm{LSB}} .
@@ -86,7 +86,7 @@ $$
 R_\mathrm{in} \approx \frac{1}{g_{m,T1}\,(1 + A_\mathrm{OTA})} < \frac{R_\mathrm{out}}{2^{N+1}} \approx 117\ \Omega .
 $$
 
-* **NMOS side (dac1/dac2 at V_ref1):** T1 is driven by a PMOS-input 5T OTA. Its gain is $A = g_{m}/(g_{ds,p} + g_{ds,n})$, and it must stay above 40 dB over the gate range the loop uses (bench D).
+* **NMOS side (dac1/dac2 at V_ref1):** T1 is driven by a PMOS-input 5T OTA. Its gain is $A = g_{m}/(g_{ds,p} + g_{ds,n})$, and it must stay above 40 dB over the gate range the loop uses.
 * **PMOS side (i1/i2 at V_ref2):** T5 is driven by an NMOS-input folded cascode (`ota_n`). Its output must sit at V_ref2 − V_SG(T5) over the 20–40 µA range of T5, so the node plan (V_fold, V_mir) is chosen around that window. The top current sources carry I_top = 1.2·I_tail, so a fully switched pair still leaves the cascodes biased.
 
 ## Clamp cell (Fig. 14)
@@ -98,7 +98,9 @@ V_d(\pm\tfrac12\,\mathrm{LSB}) = R_0\,I_\mathrm{LSB} \ge 5\ \mathrm{mV}
 \;\Rightarrow\; R_0 \ge 32\ \mathrm{k\Omega},
 $$
 
-and the node must stay inside the window in which the bench E cascodes remain saturated (`clamp.NODE_WINDOW`) for ±10 µA, the largest SAR step.
+and the node must stay inside the window in which the summing-stage cascodes remain saturated (`clamp.NODE_WINDOW`) for ±10 µA, the largest SAR step.
+
+The transfer is deliberately compressive: the step per code is largest at the decision point and shrinks toward the ends of the code range, where the clamps limit the node swing. In the summing stage the common-mode current ε (≈ 0.42 µA) biases both cells slightly above zero current, where R is about 35.7 kΩ instead of 33 kΩ. That makes the in-circuit step at the decision point ≈ 11.3 mV per code (`V_LSB_CMP`), about 8 % more than $2\,R_\mathrm{tr}\,I_\mathrm{LSB}$ = 10.3 mV.
 
 ## Comparator (Fig. 15)
 
@@ -131,12 +133,12 @@ INL and DNL are measured on a 513-point ramp (0.22 LSB steps). They are judged t
 | Block | Notebook | Key results |
 | --- | --- | --- |
 | ADC | `adc/adc_analysis` | ENOB 6.94, SINAD 42.1 dB, THD −57.6 dBc, SFDR 48.9 dBc; INL 0.086 LSB, no missing codes; 690 µW, 5.6 pJ/conv-step |
-| V-to-I | `vi_converter/bench_vi_analysis` | INL 0.062 LSB, THD −70.7 dBc, PM ≥ 61°, settling 39.5 ns |
-| Summing stage | `summing_stage/bench_e_analysis` | DAC INL 0.136 LSB, DNL 0.206 LSB, offset +0.10 LSB, 7.58 mV per code at the comparator |
-| Clamp cell | `summing_stage/bench_f_analysis` | R0 = 33 kΩ, 5.16 mV for ½ LSB, leakage 0.053 LSB |
-| Comparator | `comparator/bench_g_analysis` | 2.38 ns at ½ LSB, offset 0.00 mV, hysteresis 0.25 mV, works 0.6–1.3 V common mode |
-| NMOS cascode | `cascode/bench_c_analysis` | R_in 20.9 Ω DC, PM 62–64°, f_u ≈ 37 MHz |
-| PMOS-input OTA | `cascode/bench_d_analysis` | 43.9 dB, f_u 81 MHz |
+| V-to-I | `vi_converter/vi_converter_analysis` | INL 0.062 LSB, THD −70.7 dBc, PM ≥ 61°, settling 39.5 ns |
+| Summing stage | `summing_stage/summing_stage_analysis` | DAC INL 0.136 LSB, DNL 0.206 LSB, offset +0.10 LSB, 11.3 mV per code at the decision point |
+| Clamp cell | `summing_stage/iv_clamp_analysis` | R0 = 33 kΩ, 5.16 mV for ½ LSB, leakage 0.053 LSB |
+| Comparator | `comparator/comparator_analysis` | 2.38 ns at ½ LSB, offset 0.00 mV, hysteresis 0.25 mV, works 0.6–1.3 V common mode |
+| NMOS cascode | `cascode/nmos_cascode_analysis` | R_in 20.9 Ω DC, PM 62–64°, f_u ≈ 37 MHz |
+| PMOS-input OTA | `cascode/ota_p_analysis` | 43.9 dB, f_u 81 MHz |
 
 ### Open issues
 
@@ -144,7 +146,6 @@ Each of these is a FAIL in its notebook's summary table:
 
 * **Comparator random offset:** 13.8 mV at 3σ against 5 mV (hand estimate). The common-mode window also misses its low end by 5 mV.
 * **V-to-I random offset:** 2.70 LSB at 3σ against 2 LSB (hand estimate).
-* **V-to-I bench:** the OTA fold sinks and mirror run at 25–35 mV of V_DS − V_DSAT. The I_out+ + I_out− error is 1.04 LSB and its common-mode sensitivity is 0.80 LSB, both against 0.5 LSB.
-* **Summing stage:** XM1/XM5 have 46 mV of margin against 50 mV, and the transresistance is 8.4 % above 2·R_tr.
+* **V-to-I converter:** the OTA fold sinks and mirror run at 25–35 mV of V_DS − V_DSAT. The I_out+ + I_out− error is 1.04 LSB and its common-mode sensitivity is 0.80 LSB, both against 0.5 LSB.
+* **Summing stage:** XM1/XM5 have 46 mV of margin against 50 mV.
 * **NMOS cascode:** |Z_in| reaches 119 Ω at 1 MHz against the 117 Ω budget.
-* **Carried-over value:** `V_LSB_CMP` (10.9 mV, the comparator's ½-LSB target) predates the current clamp. Bench F now gives 2 × 5.16 = 10.3 mV, and bench E measures 7.58 mV per code in circuit.

@@ -1,7 +1,7 @@
-"""Design inputs and pass/fail limits for every sizing and analysis notebook.
+"""Requirements, operating conditions and pass/fail limits shared by the sizing and analysis notebooks.
 
-Units are SI unless a name says otherwise. Plain numbers that feed the gm/Id sizing (currents,
-widths, lengths) are in uA and um, as the lookup tables are.
+Device sizing choices (gm/Id, L, branch currents, node plans) live in each block's sizing notebook.
+Units are SI unless a name says otherwise.
 """
 # ---------------------------------------------------------------- system
 VDD = 1.8
@@ -10,19 +10,21 @@ NCODE = 2 ** N_BITS
 F_CONV = 1e6                     # conversions per second
 T_BIT = 100e-9                   # one SAR bit cycle
 TEMP = 300.0
+VDS_MARGIN = 0.05                # VDS - VDSAT every saturated device must keep
 
 I_FS = 20e-6                     # ladder full-scale input current
 I_LSB = I_FS / NCODE
+I_BIAS = 40e-6                   # cascode bias copies; the cascode devices carry I_BIAS - I_ladder
 VREF1 = 0.25                     # held on dac1 / dac2 by the NMOS regulated cascodes
 VREF2 = 1.55                     # held on i1 / i2 by the PMOS regulated cascodes
 VMID = 0.9                       # DC level of the delta-I nodes (clamp reference)
 
-# ---------------------------------------------------------------- values measured on earlier benches
-I_LSB_MEAS = 156.16e-9           # ladder LSB, bench E section 2
+# ---------------------------------------------------------------- measured in one analysis, used by another
+I_LSB_MEAS = 156.16e-9           # ladder LSB (summing stage, code sweep)
 I_FS_MEAS = I_LSB_MEAS * NCODE
-VCM_CMP = 0.949                  # comparator input common mode, bench E clamp run (mean over codes)
-VCM_CMP_PP = 47.1e-3             # its variation over the codes, bench E
-V_LSB_CMP = 10.9e-3              # differential volts per LSB at the comparator input, bench F
+VCM_CMP = 0.949                  # comparator input common mode (summing stage with clamps, mean over codes)
+VCM_CMP_PP = 47.1e-3             # its variation over the codes
+V_LSB_CMP = 11.3e-3              # differential volts per code step at the decision point (summing stage with clamps)
 
 # ---------------------------------------------------------------- comparator input node
 R_NODE = 35e3                    # source resistance seen by each comparator input
@@ -30,38 +32,10 @@ C_NODE = 100e-15                 # total capacitance on each delta-I / comparato
 SETTLE_NODE = 53.1e-9            # settling time of that node in the ADC (timing budget)
 
 
-class tech:
-    """sky130 placeholders for hand capacitance / mismatch estimates."""
-    COX_FF_UM2 = 8.4
-    COV_FF_UM = 0.3              # gate overlap per um of W, each side
-    CJ_FF_UM = 0.5               # drain/source junction per um of W
-    AVT_N = AVT_P = 5.0          # mV um
-    ABETA_PCT = 1.0              # % um, current-factor mismatch
-    MUCOX_N, MUCOX_P = 170.0, 55.0   # uA/V^2
-    VTH_N, VTH_P_LVT = 0.50, 0.42
-    GAMMA_N = 0.7                # thermal-noise factor
-    N_SLOPE = 1.3
-    L_MIN_PLVT = 0.35            # um, pfet_01v8_lvt
-
-
-class ladder:
-    """M2M ladder: NMOS unit device used as a resistor."""
-    VGATE, VDS = 1.8, 0.05
-    L, W = 3.5, 1.0
-    VS = (0.25, 0.85)            # source-voltage range of the unit devices
-    N_VS = 8
-
-
 class cascode:
-    """NMOS / PMOS regulated cascodes of the summing stage (hand numbers and bench C)."""
-    IB = 40e-6                   # bias current copies; T1 carries IB - I_ladder
+    """NMOS regulated cascode on dac1/dac2."""
     R_OUT = 30e3                 # ladder output resistance, sets the R_in budget
-    # first-cut device sizing: (ID uA, gm/Id, L um, VDS V, VSB V)
-    T3 = (40, 12, 2, 0.25, 0.0)
-    T1 = (30, 12, 2, 0.5, 0.25)
-    T7 = (40, 8, 2, 0.25, 0.0)
-    T5 = (30, 12, 1, 0.2, 0.25)
-    LOOP_LEVELS = (0.0, 10e-6, 20e-6)        # ladder currents of the bench C loop-gain runs
+    LOOP_LEVELS = (0.0, 10e-6, 20e-6)        # ladder currents of the loop-gain runs
     STEP = dict(istep=10e-6, t0=1e-6, t_end=5e-6)
     SPECS = dict(
         dc_range_mv=2.0,                     # movement of v(d1) over the code range
@@ -76,38 +50,18 @@ class cascode:
 
 
 class ota_p:
-    """PMOS-input 5T OTA of the NMOS-side cascode (first-cut L sweep and bench D)."""
-    ID = 5.0                     # uA per side
-    GMID = dict(pair=14, tail=8, load=8)
-    VDS = dict(pair=0.65, tail=0.35, load=0.8)
-    L_SWEEP = (0.5, 1, 2, 4)
-    # bench D operating point
-    VCM = 0.25                   # input common mode = V_ref1
-    VO = 1.03                    # held output level: mid-code v(vo) from bench C
-    VO_NEED = (0.99, 1.06)       # output range the loop uses (bench C)
+    """PMOS-input OTA of the NMOS cascode, tested as a buffer at its in-loop operating point."""
+    VCM = VREF1
+    VO = 1.03                    # held output level: mid-code gate voltage of the NMOS cascode
+    VO_NEED = (0.99, 1.06)       # gate range the cascode loop uses over the codes
     CM_MARGIN = 0.10
     SPECS = dict(gain_db_min=40.0, cm_tol_mv=1.0)
 
 
-class ota_n:
-    """NMOS-input folded-cascode OTA of the PMOS-side cascode, sized from a node plan."""
-    VCM = VREF2
-    I_TAIL = 20.0                # uA
-    TOP_RATIO = 1.2              # I_TOP / I_TAIL
-    MARGIN = 0.05
-    I_T5 = (20, 40)              # uA, current range of the PMOS cascode T5 it drives
-    V_FOLD = 1.5
-    V_MIR = 0.18
-    VDSAT_T1 = 0.20
-    C_LOAD = 0.3e-12
-    GMID = dict(pair=14, tail=8, mirror=14, ncasc=18, pcasc=8, ptop=8, t5=12)
-    LEN = dict(pair=2, tail=2, mirror=2, ncasc=2, pcasc=2, ptop=2, t5=1)
-
-
 class summing:
-    """Bench E: summing stage with the real ladder, OTAs and clamps."""
+    """Summing stage with the real ladder, OTAs and clamp cells."""
     I1 = 10e-6                   # I1 during the code sweep; I2 = I_FS - I1
-    R_TR = 33e3                  # clamp transresistance per delta-I node
+    R_TR = 33e3                  # nominal clamp transresistance per delta-I node
     TRAN_EVENTS = [(20e-9, 63, 64), (120e-9, 64, 63), (220e-9, 63, 0), (320e-9, 0, 127), (420e-9, 127, 63)]
     SETTLE_BAND_LSB = 0.5
     SPECS = dict(
@@ -115,17 +69,16 @@ class summing:
         dnl_lsb_max=0.5,
         offset_lsb_max=0.5,
         lin_tol_lsb=0.25,
-        op_margin_v=0.05,
         reg_err_mv_max=20.0,
         peaking_db_max=2.0,
     )
 
 
 class clamp:
-    """Bench F: the current-to-voltage clamp cell on each delta-I node."""
+    """Current-to-voltage clamp cell on each delta-I node."""
     VGATE = 1.8
     IB = 0.5e-6                  # bias of the PMOS diode XM2
-    NODE_WINDOW = (0.50, 1.33)   # node range in which the bench E cascodes stay saturated
+    NODE_WINDOW = (0.50, 1.33)   # node range in which the summing-stage cascodes stay saturated
     WINDOW_MARGIN = 0.08
     I_SAR = 10e-6                # largest |delta-I| of a SAR sequence
     I_OVER = 20e-6               # over-range case
@@ -144,29 +97,12 @@ class clamp:
 
 
 class comparator:
-    """Fig. 15 comparator: hand sizing and bench G."""
-    # clocking within one bit cycle
-    T_STEP = 2e-9                # inputs change
+    """Fig. 15 comparator."""
+    T_STEP = 2e-9                # inputs change, within each bit cycle
     T_EVAL = 70e-9               # phi1 rises: PMOS latch released
-    # sizing inputs
-    I_TAIL = 8.0                 # uA
-    I_REF = 1.0                  # uA, mirror reference
-    MARGIN = 0.05
     CM_MARGIN = 0.10             # extra common-mode window each side for corners
     CM_RANGE = (VCM_CMP - VCM_CMP_PP / 2 - CM_MARGIN, VCM_CMP + VCM_CMP_PP / 2 + CM_MARGIN)
-    GMID = dict(pair=20, load=7, tail=14, latch=8)
-    LEN = dict(pair=0.5, load=0.5, tail=1.0, latch=1.0)
-    GM5_OVER_GM3 = 1.0
-    SW = dict(T9=(1.0, 0.35), T78=(1.0, 0.15), T1011=(1.0, 0.15))   # (W, L) um
-    CGG_FACTOR = 0.5
-    C_WIRE_FF = 2.0
-    C_Q_LOAD_FF = 13.0
-    INJ_MISMATCH = 0.05
-    GM_DERATE, C_DERATE = 0.7, 1.1
-    V_CONNECT = 1.0
-    N_TAU_LATCH = 2.0
-    # what the ADC asks of it
-    VIN_MIN = 0.5 * V_LSB_CMP
+    VIN_MIN = 0.5 * V_LSB_CMP    # smallest input it must resolve
     SPECS = dict(
         t_dec_ns_max=15.0,
         noise_mv_max=0.25 * V_LSB_CMP * 1e3,
@@ -174,21 +110,19 @@ class comparator:
         c_in_ff_max=15.0,
         kick_loop_max=0.2,
         kick_resid_lsb_max=0.1,
-        # bench G
         offset_mv_max=1.0,
         hyst_mv_max=0.5,
         reset_resid_mv_max=20.0,
         reset_ab_mv_max=30.0,
         pair_vds_v_min=0.2,
     )
-    # bench G stimulus
     OVERDRIVE_B = 5e-3
     DEC_FRAC, FULL_FRAC = 0.5, 0.9
     SAMPLE_BEFORE_END = 3e-9
 
 
 def comparator_plan():
-    """(group, common mode, differential) for every bit cycle of bench G."""
+    """(group, common mode, differential) for every bit cycle of the comparator testbench."""
     cyc = [('A', VCM_CMP, s * mag * 1e-3) for mag in (0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100) for s in (+1, -1)]
     cyc += [('B', vcm, d * 1e-3) for vcm in (0.6, 0.7, 0.8, 0.9, 0.949, 1.0, 1.1, 1.2, 1.3) for d in (5, -5, 1, -1)]
     ramp = [-12 + 0.25 * i for i in range(97)]
@@ -198,32 +132,15 @@ def comparator_plan():
 
 
 class vi:
-    """Fig. 16 V-to-I converter: OTA-driven NMOS source followers into resistor R."""
+    """Fig. 16 V-to-I converter."""
     V_FS_DESIGN = 0.6            # differential peak-to-peak full scale the sizing aims for
-    R_GUARD = 0.05               # R = V_FS / I_FS x (1 + R_GUARD)
     R_OHM = 31.47e3              # as built: XR1, res_high_po_0p35, L = 30.7 um
     V_FS = R_OHM * I_FS_MEAS     # circuit full scale (differential peak-to-peak)
     VD_PEAK = 0.27               # differential peak actually driven (each input +/- VD_PEAK / 2)
     EDGE_SKIP = 1 - VD_PEAK / (V_FS / 2)
-    VCM = 0.45                   # input common mode of the bench run
-    MARGIN = 0.05
-    C_COMP_FF = 200.0            # compensation cap on each OTA output (netlist cg)
-    GMID = dict(t=12, sink=14)
-    LEN = dict(t=1, sink=8.0)
-    # folded-cascode OTA (PMOS-lvt input pair)
-    FC_ID = 5.0
-    FC_RATIO = 1.2
-    FC_GMID = dict(pair=14, tail=10, sink=14, ncasc=16, pcasc=14, mir=12)
-    FC_L = dict(pair=1, tail=2, sink=2, ncasc=1, pcasc=1, mir=2)
-    RB_OTA = 10                  # OTA bias mirror ratio
-    RSK = 10                     # sink mirror ratio
-    CGG_FACTOR = 0.67
-    C_WIRE_FF = 3.0
-    KAPPA_A = 0.2                # fractional OTA-gain variation over its output swing
-    VCR_PPM_PER_V = 50.0         # resistor voltage coefficient
+    VCM = 0.45                   # input common mode
     BW_NOISE = 10e6
     SETTLE_CYCLES = 3
-    # bench
     CM_TOL = 0.10
     VREF2_TOL = 0.10
     T_WIN, M_PER, N_FFT = 256e-6, 29, 4096
@@ -237,7 +154,6 @@ class vi:
         thd_db_max=-50.0,
         settle_ns_max=SETTLE_CYCLES * T_BIT * 1e9,
         pm_deg_min=60.0,
-        op_margin_v=0.05,
         follow_mv_max=5.0,
     )
 
@@ -254,4 +170,3 @@ class adc:
     SMOOTH_LSB = 8
     SINE_TOL = 1.5
     SPECS = dict(inl_lsb_max=0.5, enob_min=6.5, thd_db_max=-45.0, sfdr_db_min=45.0)
-

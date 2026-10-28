@@ -10,6 +10,21 @@ pmos = Lookup(str(_TABLES / 'pfet_01v8.mat'))
 pmos_lvt = Lookup(str(_TABLES / 'pfet_01v8_lvt.mat'))
 
 
+class tech:
+    """Generic constants for hand estimates of parasitic capacitance, mismatch, noise and switch resistance.
+    Not extracted from sky130: COX matches a ~4.1 nm gate oxide, the rest are textbook-typical values."""
+    COX_FF_UM2 = 8.4
+    COV_FF_UM = 0.3              # gate overlap per um of W, each side
+    CJ_FF_UM = 0.5               # drain/source junction per um of W
+    AVT_N = AVT_P = 5.0          # mV um
+    ABETA_PCT = 1.0              # % um, current-factor mismatch
+    MUCOX_N, MUCOX_P = 170.0, 55.0   # uA/V^2
+    VTH_N, VTH_P_LVT = 0.50, 0.42
+    GAMMA_N = 0.7                # thermal-noise factor
+    N_SLOPE = 1.3                # subthreshold slope factor
+    L_MIN_PLVT = 0.35            # um, pfet_01v8_lvt
+
+
 def size(mos, ID, gm_id, L, VDS, VSB=0.0):
     """Width and operating point of a device carrying ID at gm/Id. PMOS values are magnitudes."""
     VDS, VSB = max(float(VDS), 0.05), max(float(VSB), 0.0)
