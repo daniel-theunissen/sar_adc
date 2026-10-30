@@ -23,7 +23,7 @@
 | Input full scale | V_FS = R·I_FS,meas = 0.629 V p-p differential | `vi.V_FS` |
 | Driven range | ±0.27 V differential | `vi.VD_PEAK` |
 
-$$
+<!-- $$
 I_\mathrm{LSB} = \frac{I_\mathrm{FS}}{2^N}, \qquad
 V_\mathrm{LSB} = \frac{V_\mathrm{FS}}{2^N} = \frac{R\,I_\mathrm{FS}}{2^N} \approx 4.91\ \mathrm{mV}
 $$
@@ -117,7 +117,7 @@ $$
 \mathrm{FoM_W} = \frac{P}{f_s\,2^{\mathrm{ENOB}}}
 $$
 
-INL and DNL are measured on a 513-point ramp (0.22 LSB steps). They are judged together with the floor that the same sweep gives for a perfect quantizer.
+INL and DNL are measured on a 513-point ramp (0.22 LSB steps). They are judged together with the floor that the same sweep gives for a perfect quantizer. -->
 
 ## Current results
 
@@ -132,12 +132,13 @@ INL and DNL are measured on a 513-point ramp (0.22 LSB steps). They are judged t
 | NMOS cascode | `cascode/nmos_cascode_analysis` | R_in 20.9 Ω DC, PM 62–64°, f_u ≈ 37 MHz |
 | PMOS-input OTA | `cascode/ota_p_analysis` | 43.9 dB, f_u 81 MHz |
 
+![transfer characteristics](transfer_curve.png)
+
+![linearity](thd.png)
+
 ### Open issues
 
-Each of these is a FAIL in its notebook's summary table:
-
-* **Comparator random offset:** 13.8 mV at 3σ against 5 mV (hand estimate). The common-mode window also misses its low end by 5 mV.
-* **V-to-I random offset:** 2.70 LSB at 3σ against 2 LSB (hand estimate).
-* **V-to-I converter:** the OTA fold sinks and mirror run at 25–35 mV of V_DS − V_DSAT. The I_out+ + I_out− error is 1.04 LSB and its common-mode sensitivity is 0.80 LSB, both against 0.5 LSB.
-* **Summing stage:** XM1/XM5 have 46 mV of margin against 50 mV.
-* **NMOS cascode:** |Z_in| reaches 119 Ω at 1 MHz against the 117 Ω budget.
+* **Random offset:** the comparator and V-to-I converter are both susceptible to offset. This can create wrong decisions and introduce extra nonlinearity in the system. These blocks should be simulated with device mismatch models.
+* **Corner analysis:** all reported results are at TT, 27C. Corner analysis is necessary to ensure that devices remain in saturation and that the design meets its performance requirements.
+* **Bias generation:** all biasing comes from ideal sources, so a bias generation scheme would need to be implemented for a tapeout.
+* **SAR controller synthesis:** the current SAR controller is currently being simulated as a fully digital block. A hardened macro would be necessary for a tapeout.
