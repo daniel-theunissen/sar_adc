@@ -26,7 +26,7 @@ divy=5
 subdivy=1
 unity=1
 x1=0
-x2=3.306e-05
+x2=1.06e-06
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -44,22 +44,22 @@ dataset=-1
 unitx=1
 logx=0
 logy=0
-rawfile=$netlist_dir/adc_ramp_a.raw
+rawfile=$netlist_dir/adc_tran.raw
 sim_type=tran
 smz0=50
 autoload=0
 digital=1
 rainbow=1}
 B 2 690 -1220 1490 -820 {flags=graph
-y1=0
-y2=0.01
+y1=0.73
+y2=1.3
 ypos1=0
 ypos2=2
 divy=5
 subdivy=1
 unity=1
 x1=0
-x2=3.306e-05
+x2=1.06e-06
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -72,7 +72,7 @@ dataset=-1
 unitx=1
 logx=0
 logy=0
-rawfile=$netlist_dir/adc_ramp_a.raw
+rawfile=$netlist_dir/adc_tran.raw
 sim_type=tran
 rainbow=1
 smz0=50}
@@ -401,7 +401,7 @@ spice_ignore=true}
 C {lab_pin.sym} 620 -440 0 0 {name=p40 sig_type=std_logic lab=VDD}
 C {launcher.sym} 60 -760 0 0 {name=h5
 descr="load waves"
-tclcommand="xschem raw_read $netlist_dir/adc_ramp_a.raw tran"
+tclcommand="xschem raw_read $netlist_dir/adc_tran.raw tran"
 }
 C {code.sym} -590 30 0 0 {name=DEBUG_SPICE only_toplevel=false value="
 .nodeset v(i1)=1.55 v(i2)=1.55 v(dac1)=0.25 v(dac2)=0.25
@@ -444,7 +444,7 @@ echo scan done
 "
 spice_ignore=true}
 C {cosim/sar_controller_iverilog.sym} 270 -350 0 0 {name=Acontroller}
-C {code.sym} 40 -140 0 0 {name=ramp_input only_toplevel=false value="
+C {code.sym} 230 -140 0 0 {name=ramp_input only_toplevel=false value="
 .param nconv=513 vpk=0.27 tr=2n tmax=0.25n
 Bidx idx 0 V = min(max(floor((time-1.051e-6)/1e-6) + min(((time-1.051e-6)/1e-6 - floor((time-1.051e-6)/1e-6))*(1e-6/\{tr\}), 1), 0), \{nconv\}-1)
 Bvd vd 0 V = -\{vpk\} + 2*\{vpk\}/(\{nconv\}-1)*v(idx)
@@ -452,19 +452,27 @@ Bvd vd 0 V = -\{vpk\} + 2*\{vpk\}/(\{nconv\}-1)*v(idx)
 .save v(vd) v(eoc) v(d_out6) v(d_out5) v(d_out4) v(d_out3) v(d_out2) v(d_out1) v(d_out0) v(d6) v(d5) v(d4) v(d3) v(d2) v(d1) i(vdd) v(iv_p) v(iv_n)
 "
 spice_ignore=true}
-C {code.sym} 220 -140 0 0 {name=sin_input only_toplevel=false value="
+C {code.sym} 410 -140 0 0 {name=sin_input only_toplevel=false value="
 .param nconv=128 vamp=0.265 sn=128 sm=11 tr=2n tmax=0.25n
 Bidx idx 0 V = min(max(floor((time-1.051e-6)/1e-6) + min(((time-1.051e-6)/1e-6 - floor((time-1.051e-6)/1e-6))*(1e-6/\{tr\}), 1), 0), \{nconv\}-1)
 Bvd vd 0 V = \{vamp\}*sin(2*pi*\{sm\}*v(idx)/\{sn\})
 .tran 0.2n \{nconv*1e-6+60e-9\} 0 \{tmax\}
 .save v(vd) v(eoc) v(d_out6) v(d_out5) v(d_out4) v(d_out3) v(d_out2) v(d_out1) v(d_out0) v(d6) v(d5) v(d4) v(d3) v(d2) v(d1) i(vdd)
 "
-}
+spice_ignore=true}
 C {code.sym} -450 -470 0 0 {name=SPICE_CTRL only_toplevel=false value="
 .control
 option reltol=1e-4
 run
-write adc_sine_a.raw
+write adc_tran.raw
 echo stream done
 .endc
 "}
+C {code.sym} 0 -140 0 0 {name=single_conversion only_toplevel=false value="
+.param nconv=513 vdiff=-0.27 tr=2n tmax=0.25n
+Bvd vd 0 V = vdiff
+.tran 0.2n 1.06e-6
+.save v(vd) v(eoc) v(d_out6) v(d_out5) v(d_out4) v(d_out3) v(d_out2) v(d_out1) v(d_out0) 
++ v(d6) v(d5) v(d4) v(d3) v(d2) v(d1) v(d0) i(vdd) v(iv_p) v(iv_n) v(clk) v(rst) v(phi1) v(phi2)
+"
+}

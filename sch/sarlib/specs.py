@@ -32,6 +32,11 @@ C_NODE = 100e-15                 # total capacitance on each delta-I / comparato
 SETTLE_NODE = 53.1e-9            # settling time of that node in the ADC (timing budget)
 
 
+class ladder:
+    """M2M ladder alone, fed I_FS through a PMOS mirror, outputs held at VREF1."""
+    SPECS = dict(inl_lsb_max=0.5, dnl_lsb_max=0.5)
+
+
 class cascode:
     """NMOS regulated cascode on dac1/dac2."""
     R_OUT = 30e3                 # ladder output resistance, sets the R_in budget

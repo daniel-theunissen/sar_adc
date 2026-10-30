@@ -62,8 +62,6 @@ C {ammeter.sym} 400 -20 0 0 {name=VIout savecurrent=true spice_ignore=0}
 C {ammeter.sym} 340 -20 0 0 {name=VIdump savecurrent=true spice_ignore=0}
 C {devices/code.sym} -440 -270 0 0 {name=SPICE_SWEEP only_toplevel=false value="
 .control
-  shell mkdir -p /foss/designs/sar_adc/sch/ladder/ladder_sweep
-  shell pwd
   set wr_vecnames
   set wr_singlescale
   unset appendwrite
@@ -96,7 +94,7 @@ C {devices/code.sym} -440 -270 0 0 {name=SPICE_SWEEP only_toplevel=false value="
 
     op
     let cv = $code
-    wrdata /foss/designs/sar_adc/sch/ladder/ladder_sweep/sweep_results.txt cv vout
+    wrdata code_sweep.csv cv vout
 
     unset wr_vecnames
     set appendwrite

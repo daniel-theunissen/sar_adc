@@ -4,15 +4,6 @@
 
 ## Signal chain
 
-```
- V+ ─┐                     I1 ──► i1 ─ PMOS reg. cascode ─┐                    ┌─ clamp ─ V_MID
-     ├─ V-to-I (Fig. 16) ─┤      (held at V_ref2)        ├─► di_p ─┐          │
- V- ─┘                     I2 ──► i2 ─ PMOS reg. cascode ─┼─► di_n ─┼─ comparator ─► SAR logic ─► code
-                                                          │         │  (Fig. 15)      (rtl/)       │
- I_FS ─ M2M ladder ─ I_D1 ──► dac1 ─ NMOS reg. cascode ───┘         └─ clamp ─ V_MID                │
-                    I_D2 ──► dac2 ─ NMOS reg. cascode   (held at V_ref1)            ◄──────────────┘
-```
-
 1. The **V-to-I converter** turns the differential input into two complementary currents I1, I2 with I1 + I2 = I_FS.
 2. The **M2M ladder** splits I_FS into I_D1 = k·I_LSB and I_D2 = I_FS − I_D1 for the trial code k.
 3. **Regulated cascodes** hold the ladder outputs at V_ref1 and the input-current nodes at V_ref2, so neither current divides into a finite output resistance. Each delta-I node is where a PMOS cascode (input side) meets an NMOS cascode (ladder side). The current it carries is the difference.
@@ -134,6 +125,7 @@ INL and DNL are measured on a 513-point ramp (0.22 LSB steps). They are judged t
 | --- | --- | --- |
 | ADC | `adc/adc_analysis` | ENOB 6.94, SINAD 42.1 dB, THD −57.6 dBc, SFDR 48.9 dBc; INL 0.086 LSB, no missing codes; 690 µW, 5.6 pJ/conv-step |
 | V-to-I | `vi_converter/vi_converter_analysis` | INL 0.062 LSB, THD −70.7 dBc, PM ≥ 61°, settling 39.5 ns |
+| Ladder | `ladder/ladder_analysis` | INL 0.099 LSB, DNL 0.199 LSB (worst at the 63 → 64 carry), monotonic; LSB 151 nA through the testbench mirror |
 | Summing stage | `summing_stage/summing_stage_analysis` | DAC INL 0.136 LSB, DNL 0.206 LSB, offset +0.10 LSB, 11.3 mV per code at the decision point |
 | Clamp cell | `summing_stage/iv_clamp_analysis` | R0 = 33 kΩ, 5.16 mV for ½ LSB, leakage 0.053 LSB |
 | Comparator | `comparator/comparator_analysis` | 2.38 ns at ½ LSB, offset 0.00 mV, hysteresis 0.25 mV, works 0.6–1.3 V common mode |

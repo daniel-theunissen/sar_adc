@@ -14,7 +14,7 @@ Schematics in xschem, simulation in ngspice, sizing from pygmid gm/Id lookup tab
 | `sch/cascode/` | Regulated cascodes and their OTAs: sizing, NMOS cascode and OTA analyses |
 | `sch/summing_stage/` | Summing stage and clamp-cell analyses |
 | `sch/comparator/` | Comparator: sizing and analysis |
-| `sch/ladder/` | M2M ladder and its unit-device sizing |
+| `sch/ladder/` | M2M ladder: unit-device sizing and analysis |
 | `sch/gmid/` | Techsweep testbenches, table conversion and gm/Id plots |
 | `sch/cosim/` | SAR-controller symbols and binaries for mixed-signal simulation |
 | `rtl/` | SAR controller RTL and cocotb tests |
@@ -22,7 +22,10 @@ Schematics in xschem, simulation in ngspice, sizing from pygmid gm/Id lookup tab
 
 ## Setup
 
+This project is intended to be run inside of the [iic-osic-tools](https://github.com/iic-jku/iic-osic-tools) docker container. Several filepaths might have to be changed for a local build.
+
 ```sh
+sak-pdk sky130A
 cd sch
 python -m venv .venv && . .venv/bin/activate
 pip install -e . jupyter
@@ -36,3 +39,7 @@ The sizing notebooks need the lookup tables `sch/gmid/{nfet_01v8,pfet_01v8,pfet_
 2. Run the block's sizing notebook and copy the device sizes into its schematic.
 3. Simulate the block's testbench in xschem (`xschem` from `sch/`, which picks up `sch/xschemrc`). Outputs land in `<block>/simulation/<testbench>.sch/`.
 4. Run the block's analysis notebook. It ends in a pass/fail table against the limits in `specs.py`.
+
+## Disclosure
+
+This project was created with assistance from AI tools. Specifically, the analysis scripts and the gm/id sizing functions were generated using an LLM. I have reviewed and edited this work and have retained records of my generative AI use. For more information on the extent and nature of AI usage, please contact me.
