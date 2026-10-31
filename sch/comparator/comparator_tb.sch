@@ -5,14 +5,14 @@ V {}
 S {}
 F {}
 E {}
-B 2 740 50 1540 450 {flags=graph
+B 2 930 -660 1730 -260 {flags=graph
 y1=0
 ypos1=-0.27
 ypos2=1.53
 divy=5
 unity=1
-x1=2.1799047e-06
-x2=4.2930286e-06
+x1=0
+x2=2.4641505e-05
 divx=5
 subdivx=1
 legendmag=1.0
@@ -34,7 +34,7 @@ xlabmag=1
 ylabmag=1.5
 subdivy=1
 sim_type=tran}
-B 2 880 460 1680 860 {flags=graph
+B 2 930 -250 1730 150 {flags=graph
 y1=0.59
 y2=1.4
 ypos1=0
@@ -42,8 +42,8 @@ ypos2=2
 divy=5
 subdivy=1
 unity=1
-x1=2.1799047e-06
-x2=4.2930286e-06
+x1=0
+x2=2.4641505e-05
 divx=5
 subdivx=1
 xlabmag=1.0
@@ -75,7 +75,7 @@ N 660 -280 660 -260 {lab=vlatb}
 N 660 -280 680 -280 {lab=vlatb}
 N 800 -300 820 -300 {lab=vlat}
 N 660 -230 820 -280 {lab=vlat}
-C {/foss/designs/sar_adc/sch/comparator/comparator.sym} 290 -120 0 0 {name=xc}
+C {comparator/comparator.sym} 290 -120 0 0 {name=xc}
 C {vsource.sym} -140 -130 0 0 {name=VDD value=1.8 savecurrent=true}
 C {lab_pin.sym} -140 -160 0 0 {name=p1 sig_type=std_logic lab=VDD}
 C {gnd.sym} -140 -100 0 0 {name=l1 lab=0}
@@ -393,7 +393,7 @@ spiceprefix=X
 }
 C {sky130_stdcells/nor2_1.sym} 740 -300 0 0 {name=x1 VGND=0 VNB=0 VPB=VDD VPWR=VDD prefix=sky130_fd_sc_hd__ }
 C {gnd.sym} 10 -60 0 0 {name=l5 lab=0}
-C {launcher.sym} 690 500 0 0 {name=h5
+C {launcher.sym} 770 -60 0 0 {name=h5
 descr="load waves"
 tclcommand="xschem raw_read $netlist_dir/comparator_tb_tran.raw tran"
 }

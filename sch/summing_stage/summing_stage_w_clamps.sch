@@ -104,7 +104,7 @@ value="
 "
 spice_ignore=false
       }
-C {/foss/designs/sar_adc/sch/cascode/ota_n.sym} 370 0 0 0 {name=x1}
+C {cascode/ota_n.sym} 370 0 0 0 {name=x1}
 C {sky130_fd_pr/pfet3_01v8.sym} 630 -180 0 0 {name=M1
 W=46
 L=2
@@ -231,7 +231,7 @@ C {lab_pin.sym} 490 -290 0 1 {name=p18 sig_type=std_logic lab=VDD}
 C {gnd.sym} 490 -140 0 0 {name=l6 lab=0}
 C {lab_pin.sym} 1000 -50 0 0 {name=p10 sig_type=std_logic lab=VDD}
 C {gnd.sym} 980 -30 0 1 {name=l8 lab=0}
-C {/foss/designs/sar_adc/sch/cascode/ota_n.sym} 1150 0 0 1 {name=x2}
+C {cascode/ota_n.sym} 1150 0 0 1 {name=x2}
 C {sky130_fd_pr/pfet3_01v8.sym} 850 -180 0 0 {name=M5
 W=46
 L=2
@@ -300,7 +300,7 @@ sa=0 sb=0 sd=0
 model=nfet_01v8
 spiceprefix=X
 }
-C {/foss/designs/sar_adc/sch/cascode/ota_p.sym} 400 260 0 0 {name=x3}
+C {cascode/ota_p.sym} 400 260 0 0 {name=x3}
 C {vsource.sym} -550 70 0 0 {name=Vref1 value=0.25 savecurrent=true}
 C {lab_pin.sym} -550 40 0 0 {name=p25 sig_type=std_logic lab=Vref1}
 C {gnd.sym} -550 100 0 0 {name=l9 lab=0}
@@ -375,7 +375,7 @@ sa=0 sb=0 sd=0
 model=nfet_01v8
 spiceprefix=X
 }
-C {/foss/designs/sar_adc/sch/cascode/ota_p.sym} 1120 260 0 1 {name=x4}
+C {cascode/ota_p.sym} 1120 260 0 1 {name=x4}
 C {lab_pin.sym} 1270 240 0 1 {name=p30 sig_type=std_logic lab=Vref1}
 C {sky130_fd_pr/cap_mim_m3_2.sym} 930 310 0 0 {name=C2 model=cap_mim_m3_2 W=8 L=8 MF=1 spiceprefix=X}
 C {gnd.sym} 930 340 0 1 {name=l15 lab=0}
@@ -395,7 +395,7 @@ C {lab_pin.sym} 1320 370 0 1 {name=p38 sig_type=std_logic lab=dac2}
 C {lab_pin.sym} 650 140 0 1 {name=p39 sig_type=std_logic lab=di_p}
 C {lab_pin.sym} 870 140 0 0 {name=p40 sig_type=std_logic lab=di_n}
 C {lab_pin.sym} 250 240 0 0 {name=p41 sig_type=std_logic lab=Vref1}
-C {/foss/designs/sar_adc/sch/ladder/ladder.sym} -660 350 0 0 {name=x5}
+C {ladder/ladder.sym} -660 350 0 0 {name=x5}
 C {lab_pin.sym} -660 290 0 0 {name=p42 sig_type=std_logic lab=VDD}
 C {gnd.sym} -660 410 0 0 {name=l18 lab=0}
 C {lab_pin.sym} -810 350 0 0 {name=p43 sig_type=std_logic lab=VDD}
@@ -445,6 +445,8 @@ C {parax_cap.sym} 890 160 0 0 {name=Ccn gnd=0 value=100f m=1}
 C {code.sym} -70 130 0 0 {name=SPICE_CTRL only_toplevel=false value="
 .nodeset v(i1)=1.55 v(i2)=1.55 v(dac1)=0.25 v(dac2)=0.25 v(di_p)=0.9 v(di_n)=0.9 v(net1)=0.35 v(net3)=0.35 v(net4)=1.0 v(net6)=1.0
 .save all
+.include summing_stage_w_clamps.save
+.option savecurrents
 .control
   alter Vcode dc = 64
   alter Vx dc = 10
@@ -673,7 +675,7 @@ descr="Annotate OP"
 tclcommand="set show_hidden_texts 1; xschem annotate_op"
 }
 C {lab_pin.sym} 740 200 0 0 {name=p56 sig_type=std_logic lab=dcp}
-C {/foss/designs/sar_adc/sch/summing_stage/iv_clamp.sym} 430 710 0 1 {name=x7}
+C {summing_stage/iv_clamp.sym} 430 710 0 1 {name=x7}
 C {lab_pin.sym} 280 690 0 0 {name=p57 sig_type=std_logic lab=VDD}
 C {lab_pin.sym} 280 730 0 0 {name=p58 sig_type=std_logic lab=dcp}
 C {gnd.sym} 280 710 0 1 {name=l29 lab=0}
@@ -682,7 +684,7 @@ C {vsource.sym} 740 570 0 0 {name=Vmid value="dc 0.9" savecurrent=true}
 C {lab_pin.sym} 740 540 0 0 {name=p60 sig_type=std_logic lab=vmid}
 C {gnd.sym} 740 600 0 0 {name=l30 lab=0}
 C {lab_pin.sym} 580 690 0 1 {name=p61 sig_type=std_logic lab=vmid}
-C {/foss/designs/sar_adc/sch/summing_stage/iv_clamp.sym} 990 700 0 0 {name=x6}
+C {summing_stage/iv_clamp.sym} 990 700 0 0 {name=x6}
 C {lab_pin.sym} 1140 680 0 1 {name=p62 sig_type=std_logic lab=VDD}
 C {lab_pin.sym} 1140 720 0 1 {name=p63 sig_type=std_logic lab=dcn}
 C {gnd.sym} 1140 700 0 0 {name=l31 lab=0}

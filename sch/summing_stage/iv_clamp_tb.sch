@@ -7,7 +7,7 @@ F {}
 E {}
 N 380 -80 410 -80 {lab=0}
 N 380 -60 380 -30 {lab=di}
-C {/foss/designs/sar_adc/sch/summing_stage/iv_clamp.sym} 230 -80 0 0 {name=xc}
+C {summing_stage/iv_clamp.sym} 230 -80 0 0 {name=xc}
 C {vsource.sym} -280 -80 0 0 {name=VDD value=1.8 savecurrent=true}
 C {lab_pin.sym} -280 -110 0 0 {name=p1 sig_type=std_logic lab=VDD}
 C {gnd.sym} -280 -50 0 0 {name=l1 lab=0}
@@ -50,6 +50,7 @@ C {code_shown.sym} -40 120 0 0 {name=SPICE only_toplevel=false value="
 .nodeset v(di)=0.9
 .save all
 .save i(vmid)
+.option savecurrents
 .include iv_clamp_tb.save
 
 .control

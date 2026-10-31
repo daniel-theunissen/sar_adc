@@ -5,31 +5,35 @@ V {}
 S {}
 F {}
 E {}
-N 520 -250 520 -160 {lab=s1}
-N 740 -250 740 -160 {lab=s2}
-N 410 -280 480 -280 {lab=g1}
-N 110 -220 110 -180 {lab=fb1}
+N 620 -250 620 -160 {lab=s1}
+N 840 -250 840 -160 {lab=s2}
+N 510 -280 580 -280 {lab=g1}
+N 150 -220 150 -180 {lab=fb1}
 N -140 20 -140 40 {lab=VDD}
-N 410 -300 430 -300 {lab=0}
-N 780 -280 850 -280 {lab=g2}
-N 740 -180 1150 -180 {lab=s2}
-N 1150 -220 1150 -180 {lab=s2}
-N 830 -300 850 -300 {lab=0}
-N 520 -360 520 -310 {lab=iop}
-N 740 -360 740 -310 {lab=ion}
-N 520 -210 600 -210 {lab=s1}
-N 660 -210 740 -210 {lab=s2}
+N 450 -300 470 -300 {lab=0}
+N 880 -280 950 -280 {lab=g2}
+N 840 -180 1250 -180 {lab=s2}
+N 1320 -220 1320 -180 {lab=s2}
+N 1000 -300 1020 -300 {lab=0}
+N 620 -360 620 -310 {lab=iop}
+N 840 -360 840 -310 {lab=ion}
+N 620 -210 700 -210 {lab=s1}
+N 760 -210 840 -210 {lab=s2}
 N -180 120 -180 180 {lab=Vbref}
 N -180 120 -140 120 {lab=Vbref}
 N -140 100 -140 150 {lab=Vbref}
-N 480 -70 700 -70 {lab=Vbref}
-N 520 -160 520 -100 {lab=s1}
-N 740 -160 740 -100 {lab=s2}
-N 350 -160 520 -160 {lab=s1}
-N 110 -160 290 -160 {lab=fb1}
-N 110 -180 110 -160 {lab=fb1}
-C {vi_converter/ota_vi.sym} 260 -270 0 0 {name=x1}
-C {sky130_fd_pr/nfet3_01v8.sym} 500 -280 0 0 {name=M1
+N 580 -70 800 -70 {lab=Vbref}
+N 620 -160 620 -100 {lab=s1}
+N 840 -160 840 -100 {lab=s2}
+N 450 -160 620 -160 {lab=s1}
+N 150 -160 330 -160 {lab=fb1}
+N 150 -180 150 -160 {lab=fb1}
+N 390 -160 450 -160 {lab=s1}
+N 450 -280 510 -280 {lab=g1}
+N 950 -280 1020 -280 {lab=g2}
+N 1250 -180 1320 -180 {lab=s2}
+C {vi_converter/ota_vi.sym} 300 -270 0 0 {name=x1}
+C {sky130_fd_pr/nfet3_01v8.sym} 600 -280 0 0 {name=M1
 W=6.1
 L=1
 body=GND
@@ -44,7 +48,7 @@ sa=0 sb=0 sd=0
 model=nfet_01v8
 spiceprefix=X
 }
-C {sky130_fd_pr/nfet3_01v8.sym} 760 -280 0 1 {name=M2
+C {sky130_fd_pr/nfet3_01v8.sym} 860 -280 0 1 {name=M2
 W=6.1
 L=1
 body=GND
@@ -59,7 +63,7 @@ sa=0 sb=0 sd=0
 model=nfet_01v8
 spiceprefix=X
 }
-C {sky130_fd_pr/nfet3_01v8.sym} 500 -70 0 0 {name=M3
+C {sky130_fd_pr/nfet3_01v8.sym} 600 -70 0 0 {name=M3
 W=36
 L=8
 body=GND
@@ -74,7 +78,7 @@ sa=0 sb=0 sd=0
 model=nfet_01v8
 spiceprefix=X
 }
-C {sky130_fd_pr/nfet3_01v8.sym} 720 -70 0 0 {name=M4
+C {sky130_fd_pr/nfet3_01v8.sym} 820 -70 0 0 {name=M4
 W=36
 L=8
 body=GND
@@ -115,39 +119,39 @@ C {devices/launcher.sym} 100 150 0 0 {name=h1
 descr="Annotate OP" 
 tclcommand="set show_hidden_texts 1; xschem annotate_op"
 }
-C {lab_pin.sym} 410 -320 0 1 {name=p2 sig_type=std_logic lab=VDD}
-C {gnd.sym} 430 -300 0 0 {name=l3 lab=0}
-C {sky130_fd_pr/cap_mim_m3_2.sym} 440 -250 0 0 {name=C1 model=cap_mim_m3_2 W=10 L=10 MF=1 spiceprefix=X}
-C {gnd.sym} 440 -220 0 0 {name=l4 lab=0}
-C {vi_converter/ota_vi.sym} 1000 -270 0 1 {name=x2}
-C {lab_pin.sym} 850 -320 0 0 {name=p3 sig_type=std_logic lab=VDD}
-C {gnd.sym} 830 -300 0 1 {name=l6 lab=0}
-C {sky130_fd_pr/cap_mim_m3_2.sym} 820 -250 0 1 {name=C2 model=cap_mim_m3_2 W=10 L=10 MF=1 spiceprefix=X}
-C {gnd.sym} 820 -220 0 1 {name=l8 lab=0}
-C {gnd.sym} 520 -40 0 0 {name=l9 lab=0}
-C {gnd.sym} 740 -40 0 0 {name=l10 lab=0}
+C {lab_pin.sym} 450 -320 0 1 {name=p2 sig_type=std_logic lab=VDD}
+C {gnd.sym} 470 -300 0 0 {name=l3 lab=0}
+C {sky130_fd_pr/cap_mim_m3_2.sym} 490 -250 0 0 {name=C1 model=cap_mim_m3_2 W=10 L=10 MF=1 spiceprefix=X}
+C {gnd.sym} 490 -220 0 0 {name=l4 lab=0}
+C {vi_converter/ota_vi.sym} 1170 -270 0 1 {name=x2}
+C {lab_pin.sym} 1020 -320 0 0 {name=p3 sig_type=std_logic lab=VDD}
+C {gnd.sym} 1000 -300 0 1 {name=l6 lab=0}
+C {sky130_fd_pr/cap_mim_m3_2.sym} 970 -250 0 1 {name=C2 model=cap_mim_m3_2 W=10 L=10 MF=1 spiceprefix=X}
+C {gnd.sym} 970 -220 0 1 {name=l8 lab=0}
+C {gnd.sym} 620 -40 0 0 {name=l9 lab=0}
+C {gnd.sym} 840 -40 0 0 {name=l10 lab=0}
 C {vsource.sym} -490 -330 0 0 {name=Vref2 value=1.55 savecurrent=true}
 C {lab_pin.sym} -490 -360 0 0 {name=p5 sig_type=std_logic lab=vref2}
 C {gnd.sym} -490 -300 0 0 {name=l11 lab=0}
-C {lab_pin.sym} 520 -420 2 0 {name=p6 sig_type=std_logic lab=vref2}
-C {lab_pin.sym} 740 -420 2 1 {name=p8 sig_type=std_logic lab=vref2}
-C {sky130_fd_pr/res_high_po_0p35.sym} 630 -210 3 0 {name=R1
+C {lab_pin.sym} 620 -420 2 0 {name=p6 sig_type=std_logic lab=vref2}
+C {lab_pin.sym} 840 -420 2 1 {name=p8 sig_type=std_logic lab=vref2}
+C {sky130_fd_pr/res_high_po_0p35.sym} 730 -210 3 0 {name=R1
 L=30.7
 model=res_high_po_0p35
 spiceprefix=X
 mult=1}
-C {lab_pin.sym} 110 -320 0 0 {name=p9 sig_type=std_logic lab=Vbn1}
-C {lab_pin.sym} 110 -300 0 0 {name=p10 sig_type=std_logic lab=Vbn2}
-C {lab_pin.sym} 110 -280 0 0 {name=p11 sig_type=std_logic lab=Vbp1}
-C {lab_pin.sym} 110 -260 0 0 {name=p12 sig_type=std_logic lab=Vbp2}
-C {lab_pin.sym} 1150 -320 0 1 {name=p13 sig_type=std_logic lab=Vbn1}
-C {lab_pin.sym} 1150 -300 0 1 {name=p18 sig_type=std_logic lab=Vbn2}
-C {lab_pin.sym} 1150 -280 0 1 {name=p19 sig_type=std_logic lab=Vbp1}
-C {lab_pin.sym} 1150 -260 0 1 {name=p20 sig_type=std_logic lab=Vbp2}
-C {ammeter.sym} 520 -390 0 0 {name=Vo1 savecurrent=true spice_ignore=0}
-C {ammeter.sym} 740 -390 0 0 {name=Vo2 savecurrent=true spice_ignore=0}
-C {lab_pin.sym} 520 -360 2 0 {name=p21 sig_type=std_logic lab=iop}
-C {lab_pin.sym} 740 -360 2 1 {name=p22 sig_type=std_logic lab=ion}
+C {lab_pin.sym} 150 -320 0 0 {name=p9 sig_type=std_logic lab=Vbn1}
+C {lab_pin.sym} 150 -300 0 0 {name=p10 sig_type=std_logic lab=Vbn2}
+C {lab_pin.sym} 150 -280 0 0 {name=p11 sig_type=std_logic lab=Vbp1}
+C {lab_pin.sym} 150 -260 0 0 {name=p12 sig_type=std_logic lab=Vbp2}
+C {lab_pin.sym} 1320 -320 0 1 {name=p13 sig_type=std_logic lab=Vbn1}
+C {lab_pin.sym} 1320 -300 0 1 {name=p18 sig_type=std_logic lab=Vbn2}
+C {lab_pin.sym} 1320 -280 0 1 {name=p19 sig_type=std_logic lab=Vbp1}
+C {lab_pin.sym} 1320 -260 0 1 {name=p20 sig_type=std_logic lab=Vbp2}
+C {ammeter.sym} 620 -390 0 0 {name=Vo1 savecurrent=true spice_ignore=0}
+C {ammeter.sym} 840 -390 0 0 {name=Vo2 savecurrent=true spice_ignore=0}
+C {lab_pin.sym} 620 -360 2 0 {name=p21 sig_type=std_logic lab=iop}
+C {lab_pin.sym} 840 -360 2 1 {name=p22 sig_type=std_logic lab=ion}
 C {vsource.sym} -390 -330 0 0 {name=Vcm value="dc 0.45" savecurrent=true}
 C {lab_pin.sym} -390 -360 0 0 {name=p23 sig_type=std_logic lab=vcm}
 C {gnd.sym} -390 -300 0 0 {name=l12 lab=0}
@@ -163,30 +167,30 @@ C {lab_pin.sym} -590 60 0 0 {name=p28 sig_type=std_logic lab=inp}
 C {bsource.sym} -390 90 0 0 {name=Bn VAR=V FUNC="v(vcm) - 0.5*v(vd)" m=1}
 C {gnd.sym} -390 120 0 0 {name=l17 lab=0}
 C {lab_pin.sym} -390 60 0 0 {name=p29 sig_type=std_logic lab=inn}
-C {lab_pin.sym} 110 -240 0 0 {name=p30 sig_type=std_logic lab=inp}
-C {lab_pin.sym} 1150 -240 0 1 {name=p31 sig_type=std_logic lab=inn}
+C {lab_pin.sym} 150 -240 0 0 {name=p30 sig_type=std_logic lab=inp}
+C {lab_pin.sym} 1320 -240 0 1 {name=p31 sig_type=std_logic lab=inn}
 C {vsource.sym} -90 -330 0 0 {name=Vtst value="dc 0 ac 1" savecurrent=true}
 C {lab_pin.sym} -90 -360 0 0 {name=p32 sig_type=std_logic lab=tst}
 C {gnd.sym} -90 -300 0 0 {name=l18 lab=0}
 C {lab_pin.sym} -180 120 0 0 {name=p27 sig_type=std_logic lab=Vbref}
-C {lab_pin.sym} 480 -70 0 0 {name=p33 sig_type=std_logic lab=Vbref}
-C {ind.sym} 320 -160 1 0 {name=Lb1
+C {lab_pin.sym} 580 -70 0 0 {name=p33 sig_type=std_logic lab=Vbref}
+C {ind.sym} 360 -160 1 0 {name=Lb1
 m=1
 value=1f
 footprint=1206
 device=inductor}
-C {lab_pin.sym} 110 -100 0 0 {name=p37 sig_type=std_logic lab=tst}
-C {lab_wire.sym} 450 -160 0 0 {name=p34 sig_type=std_logic lab=s1}
-C {lab_wire.sym} 190 -160 0 0 {name=p38 sig_type=std_logic lab=fb1}
-C {capa.sym} 110 -130 0 0 {name=Cb1
+C {lab_pin.sym} 150 -100 0 0 {name=p37 sig_type=std_logic lab=tst}
+C {lab_wire.sym} 490 -160 0 0 {name=p34 sig_type=std_logic lab=s1}
+C {lab_wire.sym} 230 -160 0 0 {name=p38 sig_type=std_logic lab=fb1}
+C {capa.sym} 150 -130 0 0 {name=Cb1
 m=1
 value=1f
 footprint=1206
 device="ceramic capacitor"}
-C {gnd.sym} 630 -190 0 0 {name=l19 lab=0}
-C {lab_wire.sym} 480 -280 0 0 {name=p39 sig_type=std_logic lab=g1}
-C {lab_wire.sym} 780 -280 0 1 {name=p40 sig_type=std_logic lab=g2}
-C {lab_wire.sym} 870 -180 0 1 {name=p41 sig_type=std_logic lab=s2}
+C {gnd.sym} 730 -190 0 0 {name=l19 lab=0}
+C {lab_wire.sym} 580 -280 0 0 {name=p39 sig_type=std_logic lab=g1}
+C {lab_wire.sym} 880 -280 0 1 {name=p40 sig_type=std_logic lab=g2}
+C {lab_wire.sym} 1020 -180 0 1 {name=p41 sig_type=std_logic lab=s2}
 C {vsource.sym} -280 -330 0 0 {name=Vmode value="dc 0" savecurrent=true}
 C {lab_pin.sym} -280 -360 0 0 {name=p42 sig_type=std_logic lab=mode}
 C {gnd.sym} -280 -300 0 0 {name=l21 lab=0}
@@ -197,7 +201,7 @@ C {code.sym} 270 40 0 0 {name=SPICE_CTRL only_toplevel=false value="
 .nodeset v(s1)=0.45 v(s2)=0.45 v(g1)=1.1 v(g2)=1.1
 .save all
 .option savecurrents
-.include vi_converter.save
+.include vi_converter_tb.save
 .control
   save all
   set wr_singlescale
